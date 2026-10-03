@@ -1,0 +1,5 @@
+[
+  {"case": "missing fields", "body": {"request_id": "bad-001"}, "expected_status": 422},
+  {"case": "malformed email", "body": {"request_id": "bad-002", "first_name": "Sam", "last_name": "Gray", "company": "Example Company", "email": "not-an-email", "phone": "202-555-0107", "location": "Austin, TX", "request_type": "sales", "service_interest": "Cleaning", "estimated_value": "5000.00", "urgency": "normal", "lead_source": "website"}, "expected_status": 422},
+  {"case": "invalid category", "body": {"request_id": "bad-003", "first_name": "Sam", "last_name": "Gray", "company": "Example Company", "email": "sam.gray@example.com", "phone": "202-555-0107", "location": "Austin, TX", "request_type": "unknown", "service_interest": "Cleaning", "estimated_value": "5000.00", "urgency": "critical", "lead_source": "website"}, "expected_status": 422}
+]

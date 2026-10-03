@@ -1,0 +1,18 @@
+{
+  "request_id": "web-2026-001",
+  "first_name": "Avery",
+  "last_name": "Stone",
+  "company": "Oak Ridge Dental Group",
+  "title": "Office Manager",
+  "email": "avery.stone@example.com",
+  "phone": "202-555-0101",
+  "location": "Austin, TX",
+  "request_type": "sales",
+  "service_interest": "Annual facilities maintenance",
+  "estimated_value": "35000.00",
+  "urgency": "normal",
+  "lead_source": "website",
+  "notes": "Synthetic sample only",
+  "external_reference": "site-2026-001",
+  "submitted_at": "2026-01-15T10:00:00Z"
+}
