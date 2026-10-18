@@ -215,5 +215,42 @@ class TestHTTPFlow(unittest.TestCase):
         self.assertEqual(attempts[0]["http_status"], 302)
 
 
+
+
+
+
+class TestRequestBoundaries(unittest.TestCase):
+    def handler(self):
+        from northstar.api import Handler
+        from email.message import Message
+        from unittest.mock import Mock
+        handler = object.__new__(Handler)
+        handler.api_token = TOKEN
+        handler.headers = Message()
+        handler.respond = Mock()
+        handler.service = Mock()
+        handler.path = "/v1/requests"
+        return handler
+
+    def test_non_ascii_bearer_is_rejected_without_exception(self):
+        handler = self.handler()
+        handler.headers["Authorization"] = "Bearer invalid-é-token"
+        self.assertFalse(handler.authorized())
+        self.assertEqual(handler.respond.call_args.args[0], 401)
+        handler.service.intake.assert_not_called()
+
+    def test_stalled_body_returns_408_before_intake(self):
+        from unittest.mock import Mock
+        handler = self.handler()
+        handler.headers["Authorization"] = "Bearer " + TOKEN
+        handler.headers["Content-Type"] = "application/json"
+        handler.headers["Content-Length"] = "20"
+        handler.rfile = Mock()
+        handler.rfile.read.side_effect = TimeoutError("synthetic stalled client")
+        handler.do_POST()
+        self.assertEqual(handler.respond.call_args.args[0], 408)
+        handler.service.intake.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

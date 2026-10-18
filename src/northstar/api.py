@@ -18,6 +18,10 @@ class Handler(BaseHTTPRequestHandler):
     service: Service
     api_token: str
 
+    def setup(self):
+        super().setup()
+        self.connection.settimeout(10)
+
     def log_message(self, format, *args):
         # Do not put request paths or headers in access logs.
         pass
@@ -33,7 +37,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def authorized(self) -> bool:
         candidate = self.headers.get("Authorization", "")
-        if not candidate.startswith("Bearer ") or not hmac.compare_digest(candidate[7:], self.api_token):
+        if not candidate.startswith("Bearer ") or not hmac.compare_digest(candidate[7:].encode("utf-8"), self.api_token.encode("utf-8")):
             self.respond(401, {"error": {"code": "unauthorized", "message": "Valid bearer token required"}})
             return False
         return True
@@ -53,6 +57,8 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(413, {"error": {"code": "invalid_body_size", "message": "JSON body must be 1 to 32768 bytes"}})
         try:
             payload = json.loads(self.rfile.read(length))
+        except TimeoutError:
+            return self.respond(408, {"error": {"code": "request_timeout"}})
         except (ValueError, UnicodeDecodeError):
             return self.respond(400, {"error": {"code": "invalid_json"}})
         status, body = self.service.intake(payload)
@@ -108,3 +114,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

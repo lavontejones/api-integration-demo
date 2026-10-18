@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Historical local-only demo token, also shipped in .env.example; not a provider credential"
+condition = "AND"
+regexTarget = "match"
+paths = ['''(^|/)README\.md$''']
+regexes = ['''example\-local\-token\-change\-me''']
