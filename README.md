@@ -89,7 +89,7 @@ The first object in [samples/requests.json](samples/requests.json) is a complete
 
 ```bash
 curl -X POST http://127.0.0.1:8000/v1/requests \
-  -H 'Authorization: Bearer example-local-token-change-me' \
+  -H "Authorization: Bearer $DEMO_API_TOKEN" \
   -H 'Content-Type: application/json' \
   --data-binary @samples/request_oak_ridge.json
 ```
@@ -174,3 +174,4 @@ The GitHub Actions workflow runs compilation and tests on each push and pull req
 This is a functional reference, not a production service. It has no live CRM, email, SMS, booking, or accounting credentials. It sends the webhook while the intake request waits. It has no durable background worker, TLS, rate limits, secret manager, retention policy, or signed webhook. These controls would need design work before real data or public deployment.
 
 The same pattern can support website lead intake, CRM handoffs, booking systems, service requests, onboarding, support intake, billing workflows, internal operations, field-service routing, sales pipelines, and accounting handoffs. Each adaptation would map fields and rules to the real system, add its authentication and privacy controls, and test with approved data. No customer outcome or return on investment is claimed here.
+
